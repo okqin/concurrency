@@ -1,0 +1,8 @@
+[package]
+name = "concurrency"
+version = "0.1.0"
+authors = ["Ji Qin"]
+publish = false
+edition = "2021"
+
+[dependencies]
