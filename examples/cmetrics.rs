@@ -1,12 +1,12 @@
 use anyhow::Result;
-use concurrency::Metrics;
+use concurrency::CmapMetrics;
 use rand::Rng;
 use std::{thread, time::Duration};
 
 const NUMBER_THREADS: usize = 5;
 
 fn main() {
-    let metrics = Metrics::new();
+    let metrics = CmapMetrics::new();
 
     println!("{}", metrics);
 
@@ -28,7 +28,7 @@ fn main() {
     }
 }
 
-fn task_worker(idx: usize, metrics: Metrics) -> Result<()> {
+fn task_worker(idx: usize, metrics: CmapMetrics) -> Result<()> {
     thread::spawn(move || -> Result<()> {
         loop {
             metrics.inc(format!("api.v1.task{}", idx))?;
@@ -40,7 +40,7 @@ fn task_worker(idx: usize, metrics: Metrics) -> Result<()> {
     Ok(())
 }
 
-fn server_worker(metrics: Metrics) -> Result<()> {
+fn server_worker(metrics: CmapMetrics) -> Result<()> {
     thread::spawn(move || -> Result<()> {
         loop {
             let number = rand::thread_rng().gen_range(1..=5);
