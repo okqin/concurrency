@@ -1,15 +1,14 @@
 use anyhow::Result;
 use concurrency::Metrics;
 use rand::Rng;
-use std::{collections::HashMap, thread, time::Duration};
+use std::{thread, time::Duration};
 
 const NUMBER_THREADS: usize = 5;
 
 fn main() {
     let metrics = Metrics::new();
 
-    let metrics_data = get_metrics_data(&metrics);
-    println!("{:?}", metrics_data);
+    println!("{}", metrics);
 
     for i in 1..=NUMBER_THREADS {
         if let Err(e) = task_worker(i, metrics.clone()) {
@@ -24,9 +23,8 @@ fn main() {
     }
 
     loop {
-        let metrics_data = get_metrics_data(&metrics);
-        println!("{:?}", metrics_data);
-        thread::sleep(Duration::from_secs(2));
+        println!("{}", metrics);
+        thread::sleep(Duration::from_secs(1));
     }
 }
 
@@ -53,14 +51,4 @@ fn server_worker(metrics: Metrics) -> Result<()> {
         }
     });
     Ok(())
-}
-
-fn get_metrics_data(metrics: &Metrics) -> HashMap<String, i64> {
-    match metrics.snapshot() {
-        Ok(data) => data,
-        Err(e) => {
-            eprintln!("metrics.snapshot() Error: {:?}", e);
-            HashMap::default()
-        }
-    }
 }
